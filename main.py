@@ -93,6 +93,7 @@ def train_val_loop(images, segs):
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     net = Gibbs_UNet(1.0)
+    net.to(device)
     loss = DiceLoss(sigmoid=True)
     lr = 1e-3
     opt = torch.optim.Adam(net.parameters(), lr)
