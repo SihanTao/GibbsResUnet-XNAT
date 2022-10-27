@@ -36,18 +36,22 @@ import torch
 
 from model import Gibbs_UNet
 
-directory = os.environ.get("MONAI_DATA_DIRECTORY")
-root_dir = tempfile.mkdtemp() if directory is None else directory
+root_dir = Path().absolute() / 'dataset'
 
 # create synthesized data
 def random_3d_images():
     for i in range(40):
         im, seg = create_test_image_3d(128, 128, 128, num_seg_classes=1)
 
+        p = root_dir / 'random'
+        p.mkdir(parents=True, exist_ok=True)
+        
         n = nib.Nifti1Image(im, np.eye(4))
+        # nib.save(n, str(p / f"im{i}.nii.gz"))
         nib.save(n, os.path.join(root_dir, 'random', f"im{i}.nii.gz"))
 
         n = nib.Nifti1Image(seg, np.eye(4))
+        # nib.save(n, str(p / f"seg{i}.nii.gz"))
         nib.save(n, os.path.join(root_dir, 'random', f"seg{i}.nii.gz"))
     
     images = sorted(glob.glob(os.path.join(root_dir, 'random', "im*.nii.gz")))
